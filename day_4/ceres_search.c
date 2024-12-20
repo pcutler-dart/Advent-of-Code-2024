@@ -4,9 +4,12 @@
 
 //shape of input
 #define SIZE 140
+#define M (N + 1)  // +newline
+#define X (('M' + 'S') << 1)  // X-MAS corners for part 2
+
 char matrix[SIZE][SIZE];
 
-//define supporting functions
+//define supportinmatrix functions
 void readFile(const char *filename, char matrix[SIZE][SIZE]);
 void printMatrix(char matrix[SIZE][SIZE]);
 
@@ -16,7 +19,28 @@ int main(void) {
     // Read the file
     readFile(filename, matrix);
     //print matrix to verify it read correctly
-    printMatrix(matrix);
+    //printMatrix(matrix);
+    int sum = 0;
+    //scan each adjacent value for conditions of char in matrix
+    for (int i = 0; i < SIZE; ++i)
+        for (int j = 0; j < SIZE; ++j)
+            if (matrix[i][j] == 'X') {
+                sum += j > 2      && matrix[i][j-1] == 'M' && matrix[i][j-2] == 'A' && matrix[i][j-3] == 'S';
+                sum += j < SIZE-3 && matrix[i][j+1] == 'M' && matrix[i][j+2] == 'A' && matrix[i][j+3] == 'S';
+                sum += i > 2      && matrix[i-1][j] == 'M' && matrix[i-2][j] == 'A' && matrix[i-3][j] == 'S';
+                sum += i > 2      && j > 2 && matrix[i-1][j-1] == 'M' && matrix[i-2][j-2] == 'A' && matrix[i-3][j-3] == 'S';
+                sum += i > 2      && j < SIZE-3 && matrix[i-1][j+1] == 'M' && matrix[i-2][j+2] == 'A' && matrix[i-3][j+3] == 'S';
+                sum += i < SIZE-3 && matrix[i+1][j] == 'M' && matrix[i+2][j] == 'A' && matrix[i+3][j] == 'S';
+                sum += i < SIZE-3 && j > 2 && matrix[i+1][j-1] == 'M' && matrix[i+2][j-2] == 'A' && matrix[i+3][j-3] == 'S';
+                sum += i < SIZE-3 && j < SIZE-3 && matrix[i+1][j+1] == 'M' && matrix[i+2][j+2] == 'A' && matrix[i+3][j+3] == 'S';
+            }
+    printf("%d\n", sum);
+    sum = 0;
+    for (int i = 1; i < SIZE - 1; ++i)
+        for (int j = 1; j < SIZE - 1; ++j)
+            if (matrix[i][j] == 'A')
+                sum += matrix[i-1][j-1] + matrix[i-1][j+1] + matrix[i+1][j-1] + matrix[i+1][j+1] == X && matrix[i-1][j-1] != matrix[i+1][j+1];
+    printf("%d\n", sum);
 
     return 0;
 }
